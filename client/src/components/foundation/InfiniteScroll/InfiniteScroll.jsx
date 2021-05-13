@@ -1,4 +1,5 @@
 import React from 'react';
+import throttle from 'lodash.throttle'
 
 /**
  * @typedef {object} Props
@@ -18,14 +19,14 @@ const InfiniteScroll = ({ children, fetchMore }) => {
       if (hasReached && !prevReachedRef.current) {
         fetchMore();
       }
-
       prevReachedRef.current = hasReached;
     };
 
-    document.addEventListener('wheel', handler, { passive: false });
-    document.addEventListener('touchmove', handler, { passive: false });
-    document.addEventListener('resize', handler, { passive: false });
-    document.addEventListener('scroll', handler, { passive: false });
+
+    document.addEventListener('wheel', throttle(handler,200), { passive: true });
+    document.addEventListener('touchmove', throttle(handler,200), { passive: true });
+    document.addEventListener('resize', throttle(handler,200), { passive: true });
+    document.addEventListener('scroll', throttle(handler,200),{ passive: true });
     return () => {
       document.removeEventListener('wheel', handler);
       document.removeEventListener('touchmove', handler);
